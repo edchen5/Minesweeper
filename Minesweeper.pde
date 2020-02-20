@@ -25,12 +25,18 @@ void setup ()
 
 public void setMines()
 {
-    //your code
+    int x = (int)(Math.random() * NUM_ROWS);
+    int y = (int)(Math.random() * NUM_COLS);
+    if(mines.contains(buttons[x][y]))
+        setMines(); 
+    else 
+        mines.add(buttons[x][y]);
 }
 
 public void draw ()
 {
-    background( 0 );
+    background(0);
+
     if(isWon() == true)
         displayWinningMessage();
 }
@@ -51,17 +57,26 @@ public void displayWinningMessage()
     //your code here
 }
 
-public boolean isValid(int r, int c)
-{
-    //your code here
-    return false;
-}
-
 public int countMines(int row, int col)
 {
     int numMines = 0;
-    //your code here
+  
+    for(int r = row - 1; r < row + 2; r++)
+        for(int c = col - 1; c < col + 2; c++)
+            if(isValid(r, c) == true && buttons[r][c] == true)
+                numMines++;
+         
+    if(buttons[row][col] == true)
+        numMines--;
+        
     return numMines;
+}
+
+public boolean isValid(int row, int col){
+  if(row >= 0 && row < NUM_ROWS && col >= 0 && col < NUM_COLS)
+    return true;
+
+  return false;
 }
 
 public class MSButton
@@ -88,15 +103,20 @@ public class MSButton
     public void mousePressed() 
     {
         clicked = true;
-        //your code here
+        if(mouseButton == RIGHT)
+            flagged = !flagged;
+            if(flagged == false)
+                clicked = false;
+        else if(mines.contains(this))
+            displayLosingMessage();
     }
 
     public void draw() 
     {    
         if(flagged)
             fill(0);
-        // else if(clicked && mines.contains(this)) 
-        //     fill(255,0,0);
+        else if(clicked && mines.contains(this)) 
+            fill(255,0,0);
         else if(clicked)
             fill(200);
         else 
