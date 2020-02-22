@@ -1,9 +1,13 @@
 import de.bezier.guido.*;
+
 private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
-private final static int NUM_MINES = 1;
+
+private final static int NUM_MINES = 5;
+
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList(); //ArrayList of just the minesweeper buttons that are mined
+
 
 void setup ()
 {
@@ -13,7 +17,6 @@ void setup ()
     // make the manager
     Interactive.make(this);
 
-    //your code to initialize buttons goes here
     buttons = new MSButton [NUM_ROWS][NUM_COLS];
 
     for(int r = 0; r < NUM_ROWS; r++)
@@ -55,7 +58,7 @@ public boolean isWon()
 
 public void displayLosingMessage()
 {
-    text("lose", 200, 200);
+
 }
 
 public void displayWinningMessage()
@@ -107,25 +110,21 @@ public class MSButton
 
     // called by manager
     public void mousePressed() 
-    {
-        clicked = true;
-        if(mouseButton == RIGHT)
-            if(flagged == false)
-                flagged = true;
-            else 
-            {
-                flagged = false;
-                clicked = false;
-            }
-        else if(mines.contains(this))
+    {   
+        if(mouseButton == LEFT)
+          clicked = true;
+        if(mouseButton == RIGHT && !clicked)
+            flagged = !flagged;
+        else if (mines.contains(this))
             displayLosingMessage();
         else if(countMines(myRow, myCol) > 0)
-            setLabel(countMines(myRow, myCol));
-        else 
+           setLabel(countMines(myRow, myCol));
+        else
         {
             for(int r = myRow - 1; r < myRow + 2; r++)
                 for(int c = myCol - 1; c < myCol + 2; c++)
-                    buttons[r][c].clicked = true;
+                    if(isValid(r, c) && !buttons[r][c].isClicked())
+                        buttons[r][c].mousePressed();
         }
     }
 
@@ -134,7 +133,7 @@ public class MSButton
         if(flagged)
             fill(0);
         else if(clicked && mines.contains(this)) 
-            fill(255,0,0);
+            fill(255, 0, 0);
         else if(clicked)
             fill(200);
         else 
@@ -142,7 +141,7 @@ public class MSButton
 
         rect(x, y, width, height);
         fill(0);
-        text(myLabel,x+width/2,y+height/2);
+        text(myLabel, x + width / 2, y + height / 2);
     }
 
     public void setLabel(String newLabel)
@@ -158,5 +157,10 @@ public class MSButton
     public boolean isFlagged()
     {
         return flagged;
+    }
+
+    public boolean isClicked()
+    {
+        return clicked;
     }
 }
