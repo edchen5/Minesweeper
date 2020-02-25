@@ -2,14 +2,14 @@ import de.bezier.guido.*;
 
 private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
-private final static int NUM_MINES = 1;
+private final static int NUM_MINES = 10;
 
 private MSButton[][] buttons; 
 private ArrayList <MSButton> mines = new ArrayList(); 
 
 void setup ()
 {
-    size(400, 400);
+    size(400, 470);
     textAlign(CENTER,CENTER);
     
     Interactive.make(this);
@@ -41,13 +41,29 @@ public void setMines()
 
 public void draw ()
 {
+    int minesLeft = mines.size();
+
     background(0);
+
+    stroke(255);
+    rect(5, 405, 390, 60);
+
+    for(int r = 0; r < buttons.length; r++)
+        for(int c = 0; c < buttons[r].length; c++)
+            if(buttons[r][c].isFlagged())
+                minesLeft--;
+
+    stroke(0);
+    fill(255);
+    textSize(15);
+    text("Number of Mines: " + minesLeft, 90, 420);
 
     if(isWon() == true)
     {
         noLoop();
         displayWinningMessage();
     }
+
 }
 
 public boolean isWon()
@@ -72,12 +88,21 @@ public boolean isWon()
 
 public void displayLosingMessage()
 {
-    
+    for(int i = 0; i < mines.size(); i++)
+        mines.get(i).setClicked(true);
+
+    fill(255);
+    textSize(20);
+    text("You Lose!", 200, 450);
+    textSize(15);
 }
 
 public void displayWinningMessage()
 {
-    buttons[NUM_ROWS / 2][NUM_COLS / 2].setLabel("Y");
+    fill(255);
+    textSize(20);
+    text("You Win!", 200, 450);
+    textSize(15);
 }
 
 public int countMines(int row, int col)
@@ -130,7 +155,10 @@ public class MSButton
         if(mouseButton == RIGHT && !clicked)
             flagged = !flagged;
         else if (mines.contains(this))
+        {
             displayLosingMessage();
+            noLoop();
+        }
         else if(countMines(myRow, myCol) > 0)
            setLabel(countMines(myRow, myCol));
         else
@@ -176,6 +204,11 @@ public class MSButton
     public boolean isFlagged()
     {
         return flagged;
+    }
+
+    public void setClicked(boolean click)
+    {
+        clicked = click;
     }
 }
 
