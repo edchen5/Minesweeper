@@ -2,7 +2,7 @@ import de.bezier.guido.*;
 
 private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
-private final static int NUM_MINES = 10;
+private final static int NUM_MINES = 5;
 
 private MSButton[][] buttons; 
 private ArrayList <MSButton> mines = new ArrayList(); 
@@ -56,14 +56,14 @@ public void draw ()
     stroke(0);
     fill(255);
     textSize(15);
-    text("Number of Mines: " + minesLeft, 90, 420);
+    text("Number of Mines: " + mines.size(), 90, 420);
+    text("Number of Mines Left: " + minesLeft, 290, 420);
 
     if(isWon() == true)
     {
         noLoop();
         displayWinningMessage();
     }
-
 }
 
 public boolean isWon()
@@ -127,6 +127,24 @@ public boolean isValid(int row, int col){
   return false;
 }
 
+public void keyPressed()
+{
+    for(int r = 0; r < buttons.length; r++)
+        for(int c = 0; c < buttons[r].length; c++)
+        {
+            buttons[r][c].setFlagged(false);
+            buttons[r][c].setClicked(false);
+            buttons[r][c].setLabel("");
+        }
+
+    for(int i = mines.size() - 1; i >= 0; i--)
+        mines.remove(i);
+
+    setMines();
+
+    loop();
+}
+
 public class MSButton
 {
     private int myRow, myCol;
@@ -138,12 +156,17 @@ public class MSButton
     {
         width = 400 / NUM_COLS;
         height = 400 / NUM_ROWS;
+
         myRow = row;
         myCol = col; 
+
         x = myCol * width;
         y = myRow * height;
+
         myLabel = "";
+
         flagged = clicked = false;
+
         Interactive.add(this); // register it with the manager
     }
 
@@ -152,10 +175,15 @@ public class MSButton
     {
         if(mouseButton == LEFT)
             clicked = true;
+
         if(mouseButton == RIGHT && !clicked)
             flagged = !flagged;
         else if (mines.contains(this))
         {
+            for(int r = 0; r < buttons.length; r++)
+                for(int c = 0; c < buttons[r].length; c++)
+                    buttons[r][c].setFlagged(false);
+
             displayLosingMessage();
             noLoop();
         }
@@ -204,6 +232,11 @@ public class MSButton
     public boolean isFlagged()
     {
         return flagged;
+    }
+
+    public void setFlagged(boolean flag)
+    {
+        flagged = flag;
     }
 
     public void setClicked(boolean click)
