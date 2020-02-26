@@ -4,7 +4,7 @@ private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
 private final static int NUM_MINES = 5;
 
-private MSButton[][] buttons; 
+private MSButton[][] buttons = new MSButton [NUM_ROWS][NUM_COLS];; 
 private ArrayList <MSButton> mines = new ArrayList(); 
 
 void setup ()
@@ -13,8 +13,6 @@ void setup ()
     textAlign(CENTER,CENTER);
     
     Interactive.make(this);
-
-    buttons = new MSButton [NUM_ROWS][NUM_COLS];
 
     for(int r = 0; r < NUM_ROWS; r++)
         for(int c = 0; c < NUM_COLS; c++)
@@ -56,6 +54,7 @@ public void draw ()
     stroke(0);
     fill(255);
     textSize(15);
+
     text("Number of Mines: " + mines.size(), 90, 420);
     text("Number of Mines Left: " + minesLeft, 290, 420);
 
@@ -93,6 +92,7 @@ public void displayLosingMessage()
 
     fill(255);
     textSize(20);
+
     text("You Lose!", 200, 450);
     textSize(15);
 }
@@ -101,7 +101,9 @@ public void displayWinningMessage()
 {
     fill(255);
     textSize(20);
+
     text("You Win!", 200, 450);
+
     textSize(15);
 }
 
@@ -120,7 +122,8 @@ public int countMines(int row, int col)
     return numMines;
 }
 
-public boolean isValid(int row, int col){
+public boolean isValid(int row, int col)
+{
   if(row >= 0 && row < NUM_ROWS && col >= 0 && col < NUM_COLS)
     return true;
 
@@ -167,34 +170,35 @@ public class MSButton
 
         flagged = clicked = false;
 
-        Interactive.add(this); // register it with the manager
+        Interactive.add(this); 
     }
 
-    // called by manager
     public void mousePressed() 
     {
-        if(mouseButton == LEFT)
+        if(mouseButton == LEFT && !flagged)
             clicked = true;
 
         if(mouseButton == RIGHT && !clicked)
             flagged = !flagged;
-        else if (mines.contains(this))
+        else if(!flagged && mines.contains(this))
         {
             for(int r = 0; r < buttons.length; r++)
                 for(int c = 0; c < buttons[r].length; c++)
                     buttons[r][c].setFlagged(false);
 
             displayLosingMessage();
+
             noLoop();
         }
-        else if(countMines(myRow, myCol) > 0)
+        else if(clicked && countMines(myRow, myCol) > 0)
            setLabel(countMines(myRow, myCol));
         else
         {
-            for(int r = myRow - 1; r < myRow + 2; r++)
-                for(int c = myCol - 1; c < myCol + 2; c++)
-                    if(isValid(r, c) && !buttons[r][c].isClicked() && !buttons[r][c].isFlagged())
-                        buttons[r][c].mousePressed();
+            if(!flagged)
+                for(int r = myRow - 1; r < myRow + 2; r++)
+                    for(int c = myCol - 1; c < myCol + 2; c++)
+                        if(isValid(r, c) && !buttons[r][c].isClicked() && !buttons[r][c].isFlagged())
+                            buttons[r][c].mousePressed();
         }
     }
 
@@ -203,7 +207,7 @@ public class MSButton
         if(flagged)
             fill(0);
         else if(clicked && mines.contains(this)) 
-            fill(255,0,0);
+            fill(255, 0, 0);
         else if(clicked)
             fill(200);
         else 
@@ -211,7 +215,7 @@ public class MSButton
 
         rect(x, y, width, height);
         fill(0);
-        text(myLabel,x+width/2,y+height/2);
+        text(myLabel, x + width / 2, y + height / 2);
     }
 
     public boolean isClicked()
@@ -234,14 +238,14 @@ public class MSButton
         return flagged;
     }
 
-    public void setFlagged(boolean flag)
+    public void setFlagged(boolean newFlag)
     {
-        flagged = flag;
+        flagged = newFlag;
     }
 
-    public void setClicked(boolean click)
+    public void setClicked(boolean newClick)
     {
-        clicked = click;
+        clicked = newClick;
     }
 }
 
