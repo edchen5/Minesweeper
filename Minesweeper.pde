@@ -2,7 +2,7 @@ import de.bezier.guido.*;
 
 private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
-private final static int NUM_MINES = 5;
+private final static int NUM_MINES = 40;
 
 private MSButton[][] buttons = new MSButton [NUM_ROWS][NUM_COLS];; 
 private ArrayList <MSButton> mines = new ArrayList(); 
@@ -32,8 +32,6 @@ public void setMines()
             setMines(); 
         else 
             mines.add(buttons[r][c]);
-
-        //System.out.println(r + " " + c);
     }
 }
 
@@ -89,6 +87,9 @@ public void displayLosingMessage()
 {
     for(int i = 0; i < mines.size(); i++)
         mines.get(i).setClicked(true);
+
+    for(int i = 0; i < mines.size(); i++)
+                mines.get(i).setFlagged(false);
 
     fill(255);
     textSize(20);
@@ -182,12 +183,7 @@ public class MSButton
             flagged = !flagged;
         else if(!flagged && mines.contains(this))
         {
-            for(int r = 0; r < buttons.length; r++)
-                for(int c = 0; c < buttons[r].length; c++)
-                    buttons[r][c].setFlagged(false);
-
             displayLosingMessage();
-
             noLoop();
         }
         else if(clicked && countMines(myRow, myCol) > 0)
@@ -248,5 +244,3 @@ public class MSButton
         clicked = newClick;
     }
 }
-
-
