@@ -1,10 +1,10 @@
 import de.bezier.guido.*;
 
-int NUM_ROWS = 20;
-int NUM_COLS = 20;
-int NUM_MINES = 40;
+private final static int NUM_ROWS = 20;
+private final static int NUM_COLS = 20;
+private final static int NUM_MINES = 40;
 
-private MSButton[][] buttons = new MSButton [NUM_ROWS][NUM_COLS];
+private MSButton[][] buttons = new MSButton [NUM_ROWS][NUM_COLS];; 
 private ArrayList <MSButton> mines = new ArrayList(); 
 
 void setup ()
@@ -56,7 +56,7 @@ public void draw ()
     text("Number of Mines: " + mines.size(), 90, 420);
     text("Number of Mines Left: " + minesLeft, 290, 420);
 
-    if(isWon())
+    if(isWon() == true)
     {
         noLoop();
         displayWinningMessage();
@@ -69,7 +69,7 @@ public boolean isWon()
     int clickCount = 0;
 
     for(int i = 0; i < mines.size(); i++)
-        if(mines.get(i).isFlagged())
+        if(mines.get(i).isFlagged() == true)
             mineCount++;
     
     for(int r = 0; r < buttons.length; r++)
@@ -85,8 +85,11 @@ public boolean isWon()
 
 public void displayLosingMessage()
 {
+    for(int i = 0; i < mines.size(); i++)
+        mines.get(i).setClicked(true);
 
-    
+    for(int i = 0; i < mines.size(); i++)
+                mines.get(i).setFlagged(false);
 
     fill(255);
     textSize(20);
@@ -111,9 +114,12 @@ public int countMines(int row, int col)
   
     for(int r = row - 1; r < row + 2; r++)
         for(int c = col - 1; c < col + 2; c++)
-            if(isValid(r, c) && mines.contains(buttons[r][c]))
+            if(isValid(r, c) == true && mines.contains(buttons[r][c]))
                 numMines++;
-    
+         
+    if(mines.contains(buttons[row][col]))
+        numMines--;
+        
     return numMines;
 }
 
@@ -178,16 +184,7 @@ public class MSButton
         else if(!flagged && mines.contains(this))
         {
             displayLosingMessage();
-
-            for(int i = 0; i < mines.size(); i++)
-                mines.get(i).setFlagged(false);
-
-            for(int i = 0; i < mines.size(); i++)
-                mines.get(i).setClicked(true);
-
             noLoop();
-
-
         }
         else if(clicked && countMines(myRow, myCol) > 0)
            setLabel(countMines(myRow, myCol));
@@ -217,6 +214,11 @@ public class MSButton
         text(myLabel, x + width / 2, y + height / 2);
     }
 
+    public boolean isClicked()
+    {
+        return clicked;
+    }
+
     public void setLabel(String newLabel)
     {
         myLabel = newLabel;
@@ -230,11 +232,6 @@ public class MSButton
     public boolean isFlagged()
     {
         return flagged;
-    }
-
-    public boolean isClicked()
-    {
-        return clicked;
     }
 
     public void setFlagged(boolean newFlag)
