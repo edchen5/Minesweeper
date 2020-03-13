@@ -4,13 +4,13 @@ private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
 private final static int NUM_MINES = 40;
 
-private MSButton[][] buttons = new MSButton [NUM_ROWS][NUM_COLS];; 
+private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS];; 
 private ArrayList <MSButton> mines = new ArrayList(); 
 
 void setup ()
 {
     size(400, 470);
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     
     Interactive.make(this);
 
@@ -56,7 +56,7 @@ public void draw ()
     text("Number of Mines: " + mines.size(), 90, 420);
     text("Number of Mines Left: " + minesLeft, 290, 420);
 
-    if(isWon() == true)
+    if(isWon())
     {
         noLoop();
         displayWinningMessage();
@@ -69,7 +69,7 @@ public boolean isWon()
     int clickCount = 0;
 
     for(int i = 0; i < mines.size(); i++)
-        if(mines.get(i).isFlagged() == true)
+        if(mines.get(i).isFlagged())
             mineCount++;
     
     for(int r = 0; r < buttons.length; r++)
@@ -89,12 +89,13 @@ public void displayLosingMessage()
         mines.get(i).setClicked(true);
 
     for(int i = 0; i < mines.size(); i++)
-                mines.get(i).setFlagged(false);
+        mines.get(i).setFlagged(false);
 
     fill(255);
     textSize(20);
 
     text("You Lose!", 200, 450);
+
     textSize(15);
 }
 
@@ -114,7 +115,7 @@ public int countMines(int row, int col)
   
     for(int r = row - 1; r < row + 2; r++)
         for(int c = col - 1; c < col + 2; c++)
-            if(isValid(r, c) == true && mines.contains(buttons[r][c]))
+            if(isValid(r, c) && mines.contains(buttons[r][c]))
                 numMines++;
          
     if(mines.contains(buttons[row][col]))
