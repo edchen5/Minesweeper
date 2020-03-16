@@ -4,7 +4,7 @@ private final static int NUM_ROWS = 20;
 private final static int NUM_COLS = 20;
 private final static int NUM_MINES = 40;
 
-private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS];; 
+private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS];
 private ArrayList <MSButton> mines = new ArrayList(); 
 
 void setup ()
