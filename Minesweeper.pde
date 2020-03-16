@@ -186,7 +186,9 @@ public class MSButton
         {
             displayLosingMessage();
             noLoop();
-            draw();
+
+            for(int i = 0; i < mines.size(); i++)
+                mines.get(i).draw();
         }
         else if(clicked && countMines(myRow, myCol) > 0)
            setLabel(countMines(myRow, myCol));
