@@ -86,10 +86,10 @@ public boolean isWon()
 public void displayLosingMessage()
 {
     for(int i = 0; i < mines.size(); i++)
-        mines.get(i).setClicked(true);
+        mines.get(i).setFlagged(false);
 
     for(int i = 0; i < mines.size(); i++)
-        mines.get(i).setFlagged(false);
+        mines.get(i).setClicked(true);
 
     fill(255);
     textSize(20);
@@ -223,6 +223,11 @@ public class MSButton
         return clicked;
     }
 
+    public boolean isFlagged()
+    {
+        return flagged;
+    }
+
     public void setLabel(String newLabel)
     {
         myLabel = newLabel;
@@ -231,11 +236,6 @@ public class MSButton
     public void setLabel(int newLabel)
     {
         myLabel = "" + newLabel;
-    }
-
-    public boolean isFlagged()
-    {
-        return flagged;
     }
 
     public void setFlagged(boolean newFlag)
