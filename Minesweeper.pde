@@ -186,6 +186,7 @@ public class MSButton
         {
             displayLosingMessage();
             noLoop();
+            draw();
         }
         else if(clicked && countMines(myRow, myCol) > 0)
            setLabel(countMines(myRow, myCol));
